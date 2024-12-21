@@ -24,7 +24,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Common\Service\" />
+    <Folder Include="Common\UnitOfWork\" />
+    <Folder Include="Common\Repository\" />
     <Folder Include="Controllers\" />
+    <Folder Include="Entities\" />
+    <Folder Include="Data\" />
+    <Folder Include="Middleware\" />
+    <Folder Include="Configurations\" />
+    <Folder Include="Services\" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
