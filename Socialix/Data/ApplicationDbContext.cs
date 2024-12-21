@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Socialix.Entities;
 
-namespace Socialix.Entities;
+namespace Socialix.Data;
 
 public partial class ApplicationDbContext : DbContext
 {
@@ -39,7 +40,7 @@ public partial class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.CommentId).HasName("PK__Comments__C3B4DFCACFE64678");
+            entity.HasKey(e => e.CommentId).HasName("PK__Comments__C3B4DFCA2695B7BE");
 
             entity.Property(e => e.CommentId)
                 .HasMaxLength(450)
@@ -56,16 +57,16 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Post).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.PostId)
-                .HasConstraintName("FK__Comments__PostId__59FA5E80");
+                .HasConstraintName("FK__Comments__PostId__4E88ABD4");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Comments__UserId__5AEE82B9");
+                .HasConstraintName("FK__Comments__UserId__4F7CD00D");
         });
 
         modelBuilder.Entity<Follower>(entity =>
         {
-            entity.HasKey(e => e.FollowerId).HasName("PK__Follower__E859401949A55DC7");
+            entity.HasKey(e => e.FollowerId).HasName("PK__Follower__E859401918B8A3E5");
 
             entity.Property(e => e.FollowerId)
                 .HasMaxLength(450)
@@ -81,16 +82,16 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.FollowerUser).WithMany(p => p.FollowerFollowerUsers)
                 .HasForeignKey(d => d.FollowerUserId)
-                .HasConstraintName("FK__Followers__Follo__6B24EA82");
+                .HasConstraintName("FK__Followers__Follo__5FB337D6");
 
             entity.HasOne(d => d.User).WithMany(p => p.FollowerUsers)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Followers__UserI__6A30C649");
+                .HasConstraintName("FK__Followers__UserI__5EBF139D");
         });
 
         modelBuilder.Entity<Friendship>(entity =>
         {
-            entity.HasKey(e => e.FriendshipId).HasName("PK__Friendsh__4D531A5494136E65");
+            entity.HasKey(e => e.FriendshipId).HasName("PK__Friendsh__4D531A54A680C455");
 
             entity.Property(e => e.FriendshipId)
                 .HasMaxLength(450)
@@ -109,16 +110,16 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.UserId1Navigation).WithMany(p => p.FriendshipUserId1Navigations)
                 .HasForeignKey(d => d.UserId1)
-                .HasConstraintName("FK__Friendshi__UserI__628FA481");
+                .HasConstraintName("FK__Friendshi__UserI__571DF1D5");
 
             entity.HasOne(d => d.UserId2Navigation).WithMany(p => p.FriendshipUserId2Navigations)
                 .HasForeignKey(d => d.UserId2)
-                .HasConstraintName("FK__Friendshi__UserI__6383C8BA");
+                .HasConstraintName("FK__Friendshi__UserI__5812160E");
         });
 
         modelBuilder.Entity<Like>(entity =>
         {
-            entity.HasKey(e => e.LikeId).HasName("PK__Likes__A2922C14DA78A6C2");
+            entity.HasKey(e => e.LikeId).HasName("PK__Likes__A2922C146CF3A199");
 
             entity.Property(e => e.LikeId)
                 .HasMaxLength(450)
@@ -137,20 +138,20 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Comment).WithMany(p => p.Likes)
                 .HasForeignKey(d => d.CommentId)
-                .HasConstraintName("FK__Likes__CommentId__5FB337D6");
+                .HasConstraintName("FK__Likes__CommentId__5441852A");
 
             entity.HasOne(d => d.Post).WithMany(p => p.Likes)
                 .HasForeignKey(d => d.PostId)
-                .HasConstraintName("FK__Likes__PostId__5EBF139D");
+                .HasConstraintName("FK__Likes__PostId__534D60F1");
 
             entity.HasOne(d => d.User).WithMany(p => p.Likes)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Likes__UserId__5DCAEF64");
+                .HasConstraintName("FK__Likes__UserId__52593CB8");
         });
 
         modelBuilder.Entity<Message>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__Messages__C87C0C9C8A2994AA");
+            entity.HasKey(e => e.MessageId).HasName("PK__Messages__C87C0C9CF82E3FD4");
 
             entity.Property(e => e.MessageId)
                 .HasMaxLength(450)
@@ -167,16 +168,16 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Receiver).WithMany(p => p.MessageReceivers)
                 .HasForeignKey(d => d.ReceiverId)
-                .HasConstraintName("FK__Messages__Receiv__6754599E");
+                .HasConstraintName("FK__Messages__Receiv__5BE2A6F2");
 
             entity.HasOne(d => d.Sender).WithMany(p => p.MessageSenders)
                 .HasForeignKey(d => d.SenderId)
-                .HasConstraintName("FK__Messages__Sender__66603565");
+                .HasConstraintName("FK__Messages__Sender__5AEE82B9");
         });
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E12C5F3F588");
+            entity.HasKey(e => e.NotificationId).HasName("PK__Notifica__20CF2E122E261A35");
 
             entity.Property(e => e.NotificationId)
                 .HasMaxLength(450)
@@ -190,12 +191,12 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Notificat__UserI__6E01572D");
+                .HasConstraintName("FK__Notificat__UserI__628FA481");
         });
 
         modelBuilder.Entity<Post>(entity =>
         {
-            entity.HasKey(e => e.PostId).HasName("PK__Posts__AA1260183C952392");
+            entity.HasKey(e => e.PostId).HasName("PK__Posts__AA126018A11F70CA");
 
             entity.Property(e => e.PostId)
                 .HasMaxLength(450)
@@ -212,18 +213,14 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Posts__UserId__571DF1D5");
+                .HasConstraintName("FK__Posts__UserId__4BAC3F29");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4C3467E207");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07E6E9F6EB");
 
-            entity.HasIndex(e => e.Email, "UQ__Users__A9D105344297ABAD").IsUnique();
-
-            entity.HasIndex(e => e.UserName, "UQ__Users__C9F2845622D589A5").IsUnique();
-
-            entity.Property(e => e.UserId)
+            entity.Property(e => e.Id)
                 .HasMaxLength(450)
                 .IsUnicode(false);
             entity.Property(e => e.AvatarPhotoUrl)
