@@ -19,10 +19,17 @@ namespace Socialix
             Env.Load();
 
             // Get jwt information
-            var secretKey = builder.Configuration["JwtSettings:SecretKey"] ?? Environment.GetEnvironmentVariable("SECRET_KEEY");
-            var issuer = builder.Configuration["JwtSettings:Issuer"] ?? Environment.GetEnvironmentVariable("ISSUER");
-            var audience = builder.Configuration["JwtSettings:Audience"] ?? Environment.GetEnvironmentVariable("AUDIENCE");
-            double.TryParse(builder.Configuration["JwtSettings:ExprireMinutes"] ?? Environment.GetEnvironmentVariable("EXPRIRE_MINUTES"), out var expireMinutes);
+            var keyInAppsettings = builder.Configuration["JwtSettings:SecretKey"];
+            var keyInEnv = Environment.GetEnvironmentVariable("SECRET_KEY");
+            var secretKey = string.IsNullOrEmpty(keyInAppsettings) ? keyInEnv : keyInAppsettings;
+
+            var issuerInAppsettings = builder.Configuration["JwtSettings:Issuer"];
+            var issuerInEnv = Environment.GetEnvironmentVariable("ISSUER");
+            var issuer = string.IsNullOrEmpty(issuerInAppsettings) ? issuerInEnv : issuerInAppsettings;
+
+            var audienceInAppsettings = builder.Configuration["JwtSettings:Audience"];
+            var audienceInEnv = Environment.GetEnvironmentVariable("AUDIENCE");
+            var audience = string.IsNullOrEmpty(audienceInAppsettings) ? audienceInEnv : audienceInAppsettings;
 
             // Config jwt
             builder.Services.AddAuthentication(options =>

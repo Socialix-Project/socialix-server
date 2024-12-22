@@ -28,9 +28,21 @@ namespace Socialix.Common.Helpers
 
             Env.Load();
 
-            var issuer = _configuration["JwtSettings:Issuer"] ?? Environment.GetEnvironmentVariable("ISSUER");
-            var secretKey = _configuration["JwtSettings:SecretKey"] ?? Environment.GetEnvironmentVariable("SECRET_KEEY");
-            double.TryParse(_configuration["JwtSettings:ExprireMinutes"] ?? Environment.GetEnvironmentVariable("EXPRIRE_MINUTES"), out var expireMinutes);
+            var keyInAppsettings = _configuration["JwtSettings:SecretKey"];
+            var keyInEnv = Environment.GetEnvironmentVariable("SECRET_KEY");
+            var secretKey = string.IsNullOrEmpty(keyInAppsettings) ? keyInEnv : keyInAppsettings;
+
+            var issuerInAppsettings = _configuration["JwtSettings:Issuer"];
+            var issuerInEnv = Environment.GetEnvironmentVariable("ISSUER");
+            var issuer = string.IsNullOrEmpty(issuerInAppsettings) ? issuerInEnv : issuerInAppsettings;
+
+            var audienceInAppsettings = _configuration["JwtSettings:Audience"];
+            var audienceInEnv = Environment.GetEnvironmentVariable("AUDIENCE");
+            var audience = string.IsNullOrEmpty(audienceInAppsettings) ? audienceInEnv : audienceInAppsettings;
+
+            var expireMinutesInAppsettings = _configuration["JwtSettings:ExprireMinutes"];
+            var expireMinutesEnv = Environment.GetEnvironmentVariable("EXPRIRE_MINUTES");
+            var expire = string.IsNullOrEmpty(expireMinutesInAppsettings) ? double.Parse(expireMinutesEnv) : double.Parse(expireMinutesInAppsettings);
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
@@ -39,14 +51,14 @@ namespace Socialix.Common.Helpers
 {
                 new Claim("Name", userName),
                 new Claim("Role", role ?? "No role"),
-                new Claim("Expiration", expireMinutes.ToString())
+                new Claim("Expiration", expire.ToString())
             };
 
             var token = new JwtSecurityToken
             (
                 issuer: issuer,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(expireMinutes),
+                expires: DateTime.Now.AddMinutes(expire),
                 signingCredentials: creds
             );
 
