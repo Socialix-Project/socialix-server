@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Socialix.Entities;
 
@@ -32,9 +33,49 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=SocialixDB;User Id=sa;Password=12345;TrustServerCertificate=true;");
+    public override int SaveChanges()
+    {
+        UpdateTimestamps();
+        return base.SaveChanges();
+    }
+
+    private void UpdateTimestamps()
+    {
+        var entries = ChangeTracker.Entries().Where(x => x.State == EntityState.Modified || x.State == EntityState.Added);
+        PropertyInfo createdAtProp = null;
+        PropertyInfo updatedAtProp = null;
+        foreach (var entry in entries)
+        {
+            createdAtProp = entry.Entity.GetType().GetProperty("CreatedAt");
+            updatedAtProp = entry.Entity.GetType().GetProperty("UpdatedAt");
+
+            if (entry.State == EntityState.Added)
+            {
+                if (createdAtProp != null && createdAtProp.CanWrite)
+                {
+                    createdAtProp.SetValue(entry.Entity, DateTime.Now);
+                }
+
+                if (updatedAtProp != null && updatedAtProp.CanWrite)
+                {
+                    updatedAtProp.SetValue(entry.Entity, DateTime.Now);
+                }
+            }
+            else
+            {
+                if (updatedAtProp != null && updatedAtProp.CanWrite)
+                {
+                    updatedAtProp.SetValue(entry.Entity, DateTime.Now);
+                }
+            }
+        }
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        UpdateTimestamps();
+        return base.SaveChangesAsync(cancellationToken);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
