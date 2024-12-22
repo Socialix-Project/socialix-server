@@ -28,11 +28,11 @@
     <Folder Include="Common\Service\" />
     <Folder Include="Common\UnitOfWork\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Middleware\" />
     <Folder Include="Configurations\" />
     <Folder Include="Entities\" />
+    <Folder Include="Repositories\Interfaces\" />
+    <Folder Include="Repositories\Implementations\" />
     <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>

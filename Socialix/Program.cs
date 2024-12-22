@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Socialix.Data;
+using Socialix.Middlewares;
 
 namespace Socialix
 {
@@ -82,6 +83,7 @@ namespace Socialix
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
+            app.UseJwtMiddleware();  // Config custom jwt middleware
             app.UseAuthorization();
 
             app.MapControllers();
