@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Socialix.Common.Repository;
 using Socialix.Data;
 using Socialix.Middlewares;
+using Socialix.Repositories.Implementations;
+using Socialix.Repositories.Interfaces;
 
 namespace Socialix
 {
@@ -60,11 +63,13 @@ namespace Socialix
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(applicationConnection));
             builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(authConnection));
 
+            builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+            builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
             // Config Identity
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<AuthDbContext>()
                 .AddDefaultTokenProviders();
-
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
