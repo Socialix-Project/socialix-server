@@ -32,7 +32,7 @@ namespace Socialix.Repositories.Implementations
             if (isSuccceded == PasswordVerificationResult.Failed) return false;
 
             var providedPassword = _userManager.PasswordHasher.HashPassword(userInAuthDb, password);
-            var userInAppDb = _applicationDbContext.Users.AsNoTracking().FirstOrDefault(x => x.UserName == username && x.PasswordHash == providedPassword);
+            var userInAppDb = await _applicationDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.UserName == username && x.PasswordHash == providedPassword);
 
             return userInAppDb != null;
         }
@@ -49,11 +49,11 @@ namespace Socialix.Repositories.Implementations
 
             user.PasswordHash = _userManager.PasswordHasher.HashPassword(identityUser, user.PasswordHash);
             identityUser.PasswordHash = user.PasswordHash;
-            var role = (await _authDbContext.Roles.AsNoTracking().FirstOrDefaultAsync(x => x.Name == "User"));
+            var role = await _authDbContext.Roles.AsNoTracking().FirstOrDefaultAsync(x => x.Name == "User");
 
-            _userManager.CreateAsync(identityUser);
-            _userManager.AddToRoleAsync(identityUser, role?.Name ?? "User");
-            _applicationDbContext.Users.Add(user);
+            await _userManager.CreateAsync(identityUser);
+            await _userManager.AddToRoleAsync(identityUser, role?.Name ?? "User");
+            await _applicationDbContext.Users.AddAsync(user);
 
             await _applicationDbContext.SaveChangesAsync();
 
