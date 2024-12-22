@@ -1,8 +1,11 @@
 
+using System.Text;
+using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Socialix.Data;
-using Socialix.Entities;
 
 namespace Socialix
 {
@@ -11,6 +14,35 @@ namespace Socialix
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Load data from .env
+            Env.Load();
+
+            // Get jwt information
+            var secretKey = builder.Configuration["JwtSettings:SecretKey"] ?? Environment.GetEnvironmentVariable("SECRET_KEEY");
+            var issuer = builder.Configuration["JwtSettings:Issuer"] ?? Environment.GetEnvironmentVariable("ISSUER");
+            var audience = builder.Configuration["JwtSettings:Audience"] ?? Environment.GetEnvironmentVariable("AUDIENCE");
+            double.TryParse(builder.Configuration["JwtSettings:ExprireMinutes"] ?? Environment.GetEnvironmentVariable("EXPRIRE_MINUTES"), out var expireMinutes);
+
+            // Config jwt
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = issuer,
+                        ValidAudience = audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                    };
+                });
 
             // Get connection string 
             var applicationConnection = builder.Configuration.GetConnectionString("ApplicationDbConnection");
@@ -42,8 +74,8 @@ namespace Socialix
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
