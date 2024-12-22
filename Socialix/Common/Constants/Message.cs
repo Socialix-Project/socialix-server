@@ -24,6 +24,7 @@
                 "E00007" => "Input exceeds the maximum allowed length. Please reduce the size of your input.",
                 "E00008" => "Input does not meet the minimum required length. Please provide more details.",
                 "E00009" => "The input format is invalid. Please follow the expected format.",
+                "E00010" => "Input error occurred. Please check the detailed errors for more information.",
                 "E99999" => "A system error occurred. Please contact technical support.",
 
                 // Warning

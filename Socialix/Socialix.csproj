@@ -27,7 +27,6 @@
     <Folder Include="Common\Enums\" />
     <Folder Include="Common\Service\" />
     <Folder Include="Common\UnitOfWork\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Configurations\" />
     <Folder Include="Entities\" />
     <Folder Include="Services\" />

@@ -5,7 +5,7 @@ namespace Socialix.Common.Validators
 {
     public class InputCheck<T> where T : class
     {
-        public void CheckRequired(InputField<T> inputField, List<DetailError> detailErrors)
+        public static void CheckRequired(InputField<T> inputField, List<DetailError> detailErrors)
         {
             if (typeof(T) == typeof(string))
             {
