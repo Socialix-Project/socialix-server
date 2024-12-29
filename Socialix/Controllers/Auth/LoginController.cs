@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Socialix.Common.API;
 using Socialix.Common.Constants;
-using Socialix.Common.Helpers;
 using Socialix.Common.Validators;
 using Socialix.Repositories.Interfaces;
 
@@ -51,8 +50,8 @@ namespace Socialix.Controllers.Auth
 
             if (request.IsOnlyValidation) return Ok(response);
 
-            var accessToken = await _authRepository.LoginAsync(request.UserName, request.Password); 
-            if(string.IsNullOrEmpty(accessToken)) return Unauthorized();
+            var accessToken = await _authRepository.LoginAsync(request.UserName, request.Password);
+            if (string.IsNullOrEmpty(accessToken)) return Unauthorized();
 
             response.Success = true;
             response.MessageId = Message.I00001;

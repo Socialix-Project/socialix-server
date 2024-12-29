@@ -6,10 +6,4 @@ namespace Socialix.Controllers.Auth
     {
         public override Token? Response { get; set; }
     }
-
-    public class Token
-    {
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
-    }
 }
