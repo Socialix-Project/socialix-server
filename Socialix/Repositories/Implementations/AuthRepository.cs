@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Socialix.Common.Helpers;
 using Socialix.Data;
 using Socialix.Entities;
 using Socialix.Repositories.Interfaces;
@@ -14,6 +15,7 @@ namespace Socialix.Repositories.Implementations
         private UserManager<IdentityUser> _userManager;
         private AuthDbContext _authDbContext;
         private ApplicationDbContext _applicationDbContext;
+        private IConfiguration _configuration;
 
         public AuthRepository(UserManager<IdentityUser> userManager, AuthDbContext authDbContext, ApplicationDbContext applicationDbContext)
         {
@@ -22,19 +24,18 @@ namespace Socialix.Repositories.Implementations
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<bool> LoginAsync(string username, string password)
+        public async Task<string> LoginAsync(string username, string password)
         {
             var userInAuthDb = await _userManager.FindByNameAsync(username);
-            if (userInAuthDb == null) return false;
-
+            if (userInAuthDb == null) return string.Empty;
 
             var isSuccceded = _userManager.PasswordHasher.VerifyHashedPassword(userInAuthDb, userInAuthDb.PasswordHash, password);
-            if (isSuccceded == PasswordVerificationResult.Failed) return false;
+            if (isSuccceded == PasswordVerificationResult.Failed) return string.Empty;
 
             var providedPassword = _userManager.PasswordHasher.HashPassword(userInAuthDb, password);
             var userInAppDb = await _applicationDbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.UserName == username && x.PasswordHash == providedPassword);
 
-            return userInAppDb != null;
+            return userInAppDb != null ? (await new JwtHelper(_configuration, _userManager).GenerateJwtToken(username)) : string.Empty;
         }
 
         public async Task<bool> RegisterAsync(User user)

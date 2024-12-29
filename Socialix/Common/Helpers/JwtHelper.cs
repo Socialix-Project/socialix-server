@@ -26,8 +26,6 @@ namespace Socialix.Common.Helpers
 
             var role = (await _userManager.GetRolesAsync(identityUser))?.FirstOrDefault();
 
-            Env.Load();
-
             var keyInAppsettings = _configuration["JwtSettings:SecretKey"];
             var keyInEnv = Environment.GetEnvironmentVariable("SECRET_KEY");
             var secretKey = string.IsNullOrEmpty(keyInAppsettings) ? keyInEnv : keyInAppsettings;
